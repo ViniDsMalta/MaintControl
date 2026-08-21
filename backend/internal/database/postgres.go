@@ -3,14 +3,19 @@ package database
 import (
 	"context"
 
-	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 )
 
-var DB *pgx.Conn
+var DB *pgxpool.Pool
 
 func Connect(connString string) error {
-	conn, err := pgx.Connect(context.Background(), connString)
+	conn, err := pgxpool.New(context.Background(), connString)
 	if err != nil {
+		return err
+	}
+
+	if err := conn.Ping(context.Background()); err != nil {
+		conn.Close()
 		return err
 	}
 

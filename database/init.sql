@@ -25,14 +25,17 @@ CREATE TABLE IF NOT EXISTS production_lines (
 
     created_at TIMESTAMP DEFAULT NOW()
 );
-CREATE TABLE production_line_machines (
+CREATE TABLE IF NOT EXISTS production_line_machines (
     id UUID PRIMARY KEY,
 
-    production_line_id UUID NOT NULL REFERENCES production_lines(id),
+    production_line_id UUID NOT NULL REFERENCES production_lines(id) ON DELETE CASCADE,
 
-    machine_id UUID NOT NULL REFERENCES machines(id),
+    machine_id UUID NOT NULL REFERENCES machines(id) ON DELETE CASCADE,
 
-    position INTEGER NOT NULL
+    position INTEGER NOT NULL,
+
+    CONSTRAINT production_line_machine_unique UNIQUE (production_line_id, machine_id),
+    CONSTRAINT production_line_position_unique UNIQUE (production_line_id, position)
 );
 CREATE TABLE IF NOT EXISTS telemetry (
     id BIGSERIAL PRIMARY KEY,
