@@ -1,0 +1,144 @@
+*{
+    background-color: #111827;
+    color: white;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html{
+    scroll-behavior: smooth;
+}
+
+.header{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 80px;
+    background-color: #111827;
+    /* removido: position: fixed; top: 0; left: 0; */
+}
+
+.menu{
+    display: flex;
+    gap: 20px;
+    position: fixed;
+    top: 20px;   /* ajuste pra alinhar na altura que quiser */
+    right: 200px; /* ajuste pra posicionar horizontalmente perto do toggle */
+    z-index: 1100;
+}
+
+.menu-toggle {
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    position: fixed;
+    top: 20px;
+    right: 80px; /* mesma margem lateral do padding original do header */
+    z-index: 1100;
+}
+.logo {
+    height: 400px;
+    width: auto;
+    display: block;
+    position: relative;
+    top: -2px;
+    left: -10px;
+}
+/* .menu{
+    display: flex;
+    gap: 20px;
+    margin-left: auto;
+    margin-bottom: auto;
+}
+.menu-toggle {
+    /*o botao*/
+    /* display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    /*transforma o cursor naquele que nos indica que tem um botao*/
+    /* z-index: 1100;
+    margin-bottom: auto;
+    /* margin-top: 10px; */ 
+/* } */ 
+
+.menu-toggle span{
+    /*linhas do botao*/
+    width: 25px;
+    height: 3px;
+    background-color: #fff !important;
+    margin: 4px 0;
+    transition: 0.3s;
+    border-radius: 15px;
+}
+
+.menu a{
+    margin: 15px 0;
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+    font-size: 18px;
+}
+
+.dashboard{
+    padding-top: 20px; /* para não ficar embaixo do header */
+    min-height: 500px;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+    margin-left: 100px;
+    
+}
+.cards {
+    display: flex;
+    gap: 20px;
+    padding: 110px 80px 20px; /* top 100px é suficiente pra um header de ~90px de altura */
+    flex-wrap: wrap;
+    
+}
+
+.card {
+    background-color: #182135; /* a cor que estava no h3, agora no card inteiro */
+    border-radius: 26px;
+    border: 1px solid #737373;
+    padding: 24px;
+    width: 800px;
+    
+}
+.card h3{
+    background-color: #182135;
+    font-size: 35px;
+    text-align: center;
+}
+
+.cardss {
+    display: flex;
+    gap: 10rem;
+    padding: 150px 80px 20px; /* top 100px é suficiente pra um header de ~90px de altura */
+    flex-wrap: wrap;
+}
+.cardd {
+    background-color: #1F2937;
+    border-radius: 16px;
+    border: 1px solid #2ec064;
+    padding: 24px;
+    width: 250px;
+    height: 270px;
+}
+.cardd h1{
+    background-color: #1F2937;
+    font-size: 85px;
+    text-align: center;
+    margin-top: 30px; /* empurra o "4" mais pra baixo */
+}
+.cardd h3{
+    background-color: #1F2937;
+    font-size: 25px;
+    text-align: center;
+    margin-top: 60px; /* empurra o "Operando" ainda mais pra baixo, relativo ao h1 */
+}
+
+.status-operando{ border-color: #2ec064; }
+.status-atencao { border-color: #eab308; }
+.status-critico { border-color: #f15656; }
+.status-desativada { border-color: #6b7280; }
