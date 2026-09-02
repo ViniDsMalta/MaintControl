@@ -66,7 +66,7 @@ html{
 
 .dashboard{
     padding-top: 20px; /* para não ficar embaixo do header */
-    min-height: 500px;
+    min-height: 700px;
     margin-right: auto;
     display: flex;
     flex-direction: column;
@@ -127,6 +127,19 @@ html{
 .status-critico { border-color: #f15656; }
 .status-desativada { border-color: #6b7280; }
 
-.card total{
-    margin-top: 50px;
+.card.total{
+    margin: 100px;
+}
+
+.cardd.misturador{
+    margin-left: 100px;
+    width: 100rem;
+    height: 20rem;
+    justify-content: center;
+    background-color: #182135;
+    border-color: #808080 ;
+}
+
+.cardd.misturador.info{
+    height: 50rem;
 }
