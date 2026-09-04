@@ -134,12 +134,31 @@ html{
 .cardd.misturador{
     margin-left: 100px;
     width: 100rem;
-    height: 20rem;
+    height: 30rem;
     justify-content: center;
     background-color: #182135;
     border-color: #808080 ;
 }
 
-.cardd.misturador.info{
+.cardd.misturador h1{
+    font-size: 2rem;
+    margin-top: 10px;
+    background-color: #182135;
+    margin-left: 70px;
+}
+.cardd.misturador h2{
+    margin-top: -35px;
+    font-size: 1.5rem;
+    background-color: #182135;
+    margin-left: 80rem;
+}
+.cardd.misturador img{
+    margin-left: 40rem;
+    margin-top: 3rem;
+    height: 20rem;
+    background-color: #182135;
+
+}
+.cardd.info.misturador{
     height: 50rem;
 }
