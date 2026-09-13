@@ -1,0 +1,69 @@
+{
+  "machine_type": "compressor",
+  "accuracy": 0.9266409266409267,
+  "precision_macro": 0.9225256240960825,
+  "recall_macro": 0.9303923649647136,
+  "f1_macro": 0.9250414302346534,
+  "classification_report": {
+    "NORMAL": {
+      "precision": 0.8618421052631579,
+      "recall": 0.9703703703703703,
+      "f1-score": 0.9128919860627178,
+      "support": 135.0
+    },
+    "DEGRADATION": {
+      "precision": 0.9111111111111111,
+      "recall": 0.8817204301075269,
+      "f1-score": 0.8961748633879781,
+      "support": 186.0
+    },
+    "FAILURE": {
+      "precision": 0.9946236559139785,
+      "recall": 0.9390862944162437,
+      "f1-score": 0.9660574412532638,
+      "support": 197.0
+    },
+    "accuracy": 0.9266409266409267,
+    "macro avg": {
+      "precision": 0.9225256240960825,
+      "recall": 0.9303923649647136,
+      "f1-score": 0.9250414302346534,
+      "support": 518.0
+    },
+    "weighted avg": {
+      "precision": 0.930031295544878,
+      "recall": 0.9266409266409267,
+      "f1-score": 0.927108607404486,
+      "support": 518.0
+    }
+  },
+  "confusion_matrix": [
+    [
+      131,
+      4,
+      0
+    ],
+    [
+      21,
+      164,
+      1
+    ],
+    [
+      0,
+      12,
+      185
+    ]
+  ],
+  "labels": [
+    "NORMAL",
+    "DEGRADATION",
+    "FAILURE"
+  ],
+  "data_split": {
+    "train_sessions": 122,
+    "test_sessions": 30,
+    "train_windows": 2110,
+    "test_windows": 518
+  },
+  "model_path": "models\\compressor_model.joblib"
+}
