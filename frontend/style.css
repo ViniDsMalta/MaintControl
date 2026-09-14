@@ -168,10 +168,15 @@ html{
     gap: 10rem;
     padding: 150px 80px 20px; /* top 100px é suficiente pra um header de ~90px de altura */
     flex-wrap: wrap;
-    height: 47rem;
+    height: 85rem;
     background-color: #2ec064;
 }
-
-.info-misturador1{
-    height: 20px;
+.info {
+    width: 350px;
+    height: 500px;
+    border-radius: 20px;
+    background-color: #1F2937;
+    border: 1px solid #374151;
 }
+
+jd
