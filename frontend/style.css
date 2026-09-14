@@ -162,3 +162,16 @@ html{
 .cardd.info.misturador{
     height: 50rem;
 }
+
+.info-cards {
+    display: flex;
+    gap: 10rem;
+    padding: 150px 80px 20px; /* top 100px é suficiente pra um header de ~90px de altura */
+    flex-wrap: wrap;
+    height: 47rem;
+    background-color: #2ec064;
+}
+
+.info-misturador1{
+    height: 20px;
+}
