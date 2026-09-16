@@ -146,7 +146,7 @@ html{
     background-color: #182135;
     margin-left: 70px;
 }
-.cardd.misturador h2{
+.cardd.misturador > h2{
     margin-top: -35px;
     font-size: 1.5rem;
     background-color: #182135;
@@ -200,5 +200,9 @@ html{
 .info.caards.temperatura.bordacards h2{
     display: flex;
     justify-content: left;
-    
+    background-color: #132841;
+    margin-top: 7.5rem;
+    margin-left: 4rem;
+    font-size: 2.5rem;
+    width: fit-content;
 }
