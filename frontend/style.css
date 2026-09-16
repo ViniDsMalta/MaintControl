@@ -181,14 +181,9 @@ html{
     background-color: #1F2937;
     border: 1px solid #374151;
 }
-.info.misturador1{background-color: #132841;
+.info.caards{background-color: #132841;
 } /*cada um dos cards das informações estão aqui*/
-.info.misturador2{background-color: #132841;
-}
-.info.misturador3{background-color: #132841;
-}
-.info.misturador4{background-color: #132841;
-}
+
 
 .bordacards {
     border: 1px solid #ffffffcc;
