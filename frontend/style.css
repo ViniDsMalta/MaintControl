@@ -188,3 +188,17 @@ html{
 .bordacards {
     border: 1px solid #ffffffcc;
 }
+
+.info.caards.temperatura.bordacards h1{
+    background-color: #132841;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 50px;
+    margin-top: 30px;
+}
+.info.caards.temperatura.bordacards h2{
+    display: flex;
+    justify-content: left;
+    
+}
