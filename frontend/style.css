@@ -25,12 +25,12 @@ html{
     top: 0;
     left: 0;
     width: 100%;
-    background-color: #111827;
+    background-color: rgba(17, 24, 39, 0.7); /* mesma cor #111827, mas com 70% de opacidade */
     display: flex;
     justify-content: flex-end;
     align-items: center;
     gap: 30px;
-    padding: 14px 80px; /* reduzido de 20px pra 14px */
+    padding: 14px 80px;
     z-index: 1100;
 }
 
@@ -69,8 +69,12 @@ html{
     text-decoration: none;
     color: rgb(255, 255, 255);
     font-size: 18px;
+    background-color: transparent;
 }
 
+#menu a{
+    background-color: transparent !important;
+}
 .dashboard{
     padding-top: 20px; /* para não ficar embaixo do header */
     min-height: 700px;
