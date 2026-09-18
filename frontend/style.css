@@ -20,23 +20,31 @@ html{
     /* removido: position: fixed; top: 0; left: 0; */
 }
 
-.menu{
+.nav-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #111827;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 30px;
+    padding: 14px 80px; /* reduzido de 20px pra 14px */
+    z-index: 1100;
+}
+
+.menu {
     display: flex;
     gap: 20px;
-    position: fixed;
-    top: 20px;   /* ajuste pra alinhar na altura que quiser */
-    right: 200px; /* ajuste pra posicionar horizontalmente perto do toggle */
-    z-index: 1100;
+    /* removido: position: fixed, top, right, z-index (agora vêm do .nav-bar) */
 }
 
 .menu-toggle {
     display: flex;
     flex-direction: column;
     cursor: pointer;
-    position: fixed;
-    top: 20px;
-    right: 80px; /* mesma margem lateral do padding original do header */
-    z-index: 1100;
+    /* removido: position: fixed, top, right, z-index (agora vêm do .nav-bar) */
 }
 .logo {
     height: 400px;
@@ -58,7 +66,6 @@ html{
 }
 
 .menu a{
-    margin: 15px 0;
     text-decoration: none;
     color: rgb(255, 255, 255);
     font-size: 18px;
