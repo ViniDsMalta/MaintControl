@@ -291,3 +291,114 @@ html{
     font-size: 25px;
     margin-top: 6rem;
 }
+
+/*FERMENTADORA*/
+.cardd.fermentadora{
+    margin-left: 100px;
+    width: 100rem;
+    height: 30rem;
+    justify-content: center;
+    background-color: #182135;
+    border: 1px solid #ffffffff;
+    margin-top: 150px;
+}
+
+.cardd.fermentadora h1{
+    font-size: 2rem;
+    margin-top: 10px;
+    background-color: #182135;
+    margin-left: 70px;
+}
+.cardd.fermentadora > h2{
+    margin-top: -35px;
+    font-size: 1.5rem;
+    background-color: #182135;
+    margin-left: 80rem;
+    
+}
+.cardd.fermentadora img{
+    margin-left: 40rem;
+    margin-top: 3rem;
+    height: 20rem;
+    background-color: #182135;
+    
+
+}
+.cardd.info.fermentadora{ /*segundo card(o maior) do fermentador. dentro dele esta o inf-cards e os info.fermentadora1*/
+    height: 47rem;
+    border: 1px solid #ffffffff;
+    margin-top: 0;
+}
+
+.info-cards {
+    display: flex;
+    gap: 10rem;
+    padding: 150px 80px 20px; /* top 100px é suficiente pra um header de ~90px de altura */
+    flex-wrap: wrap;
+    height: 45rem;
+    background-color: #182135;
+}
+.info {
+    width: 350px;
+    height: 500px;
+    border-radius: 20px;
+    background-color: #1F2937;
+    border: 1px solid #374151;
+}
+.info.caards{background-color: #132841;
+} /*cada um dos cards das informações estão aqui*/
+
+
+.bordacards {
+    border: 1px solid #ffffffcc;
+}
+ /*TEMPERATURA MISTURADOR*/
+.info.caards.temperatura.bordacards h1{
+    background-color: #132841;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 50px;
+    margin-top: 30px;
+}
+.info.caards.temperatura.bordacards h2{
+    display: flex;
+    justify-content: left;
+    background-color: #132841;
+    margin-top: 7.5rem;
+    margin-left: 4rem;
+    font-size: 2.5rem;
+    width: fit-content;
+}
+.info.caards.temperatura.bordacards h4{
+    display: flex;
+    justify-content: center;
+    background-color: #132841;
+    font-size: 25px;
+    margin-top: 6rem;
+}
+
+/*CORRENTE ELETRICA MISTURADOR*/
+.info.caards.corrente_eletrica.bordacards h1{
+    background-color: #132841;
+    display: flex;
+    margin-left: 58px;
+    margin-top: 30px;
+}
+.info.caards.corrente_eletrica.bordacards h2{
+    display: flex;
+    background-color: #132841;
+    justify-content: left;
+    width: fit-content;
+    margin-top: 7.5rem;
+    margin-left: 4rem;
+    font-size: 2.5rem;
+}
+
+.info.caards.corrente_eletrica.bordacards h4{
+    background-color: #132841;
+    display: flex;
+    justify-content: center;
+    font-size: 25px;
+    margin-top: 6rem;
+}
