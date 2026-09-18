@@ -317,7 +317,7 @@ html{
     
 }
 .cardd.fermentadora img{
-    margin-left: 40rem;
+    margin-left: 25rem;
     margin-top: 3rem;
     height: 20rem;
     background-color: #182135;
@@ -352,8 +352,70 @@ html{
 .bordacards {
     border: 1px solid #ffffffcc;
 }
- /*TEMPERATURA MISTURADOR*/
-.info.caards.temperatura.bordacards h1{
+
+
+/*FORNO*/
+.cardd.forno{
+    margin-left: 100px;
+    width: 100rem;
+    height: 30rem;
+    justify-content: center;
+    background-color: #182135;
+    border: 1px solid #ffffffff;
+    margin-top: 150px;
+}
+
+.cardd.forno h1{
+    font-size: 2rem;
+    margin-top: 10px;
+    background-color: #182135;
+    margin-left: 70px;
+}
+.cardd.forno > h2{
+    margin-top: -35px;
+    font-size: 1.5rem;
+    background-color: #182135;
+    margin-left: 80rem;
+    
+}
+.cardd.forno img{
+    margin-left: 42rem;
+    margin-top: 3rem;
+    height: 20rem;
+    background-color: #182135;
+
+}
+.cardd.info.forno{ /*segundo card(o maior) do forno. dentro dele esta o inf-cards e os info.fermentadora1*/
+    height: 87rem;
+    border: 1px solid #ffffffff;
+    margin-top: 0;
+}
+
+.info-cards {
+    display: flex;
+    gap: 10rem;
+    padding: 150px 80px 20px; /* top 100px é suficiente pra um header de ~90px de altura */
+    flex-wrap: wrap;
+    height: 45rem;
+    background-color: #182135;
+}
+.info {
+    width: 350px;
+    height: 500px;
+    border-radius: 20px;
+    background-color: #1F2937;
+    border: 1px solid #374151;
+}
+.info.caards{background-color: #132841;
+} /*cada um dos cards das informações estão aqui*/
+
+
+.bordacards {
+    border: 1px solid #ffffffcc;
+}
+
+/*VAZAO FORNO*/
+.info.caards.vazao.bordacards h1{
     background-color: #132841;
     display: flex;
     justify-content: center;
@@ -361,31 +423,94 @@ html{
     margin-right: 50px;
     margin-top: 30px;
 }
-.info.caards.temperatura.bordacards h2{
+.info.caards.vazao.bordacards h2{
     display: flex;
-    justify-content: left;
     background-color: #132841;
+    justify-content: left;
+    width: fit-content;
     margin-top: 7.5rem;
     margin-left: 4rem;
     font-size: 2.5rem;
-    width: fit-content;
 }
-.info.caards.temperatura.bordacards h4{
+
+.info.caards.vazao.bordacards h4{
+    background-color: #132841;
     display: flex;
     justify-content: center;
-    background-color: #132841;
     font-size: 25px;
     margin-top: 6rem;
 }
 
-/*CORRENTE ELETRICA MISTURADOR*/
-.info.caards.corrente_eletrica.bordacards h1{
+/*RESFRIADOR*/
+.cardd.resfriador{
+    margin-left: 100px;
+    width: 100rem;
+    height: 30rem;
+    justify-content: center;
+    background-color: #182135;
+    border: 1px solid #ffffffff;
+    margin-top: 150px;
+}
+
+.cardd.resfriador h1{
+    font-size: 2rem;
+    margin-top: 10px;
+    background-color: #182135;
+    margin-left: 70px;
+}
+.cardd.resfriador > h2{
+    margin-top: -35px;
+    font-size: 1.5rem;
+    background-color: #182135;
+    margin-left: 80rem;
+    
+}
+.cardd.resfriador img{
+    margin-left: 33rem;
+    margin-top: 3rem;
+    height: 20rem;
+    background-color: #182135;
+
+}
+.cardd.info.resfriador{ /*segundo card(o maior) do forno. dentro dele esta o inf-cards e os info.fermentadora1*/
+    height: 87rem;
+    border: 1px solid #ffffffff;
+    margin-top: 0;
+}
+
+.info-cards {
+    display: flex;
+    gap: 10rem;
+    padding: 150px 80px 20px; /* top 100px é suficiente pra um header de ~90px de altura */
+    flex-wrap: wrap;
+    height: 45rem;
+    background-color: #182135;
+}
+.info {
+    width: 350px;
+    height: 500px;
+    border-radius: 20px;
+    background-color: #1F2937;
+    border: 1px solid #374151;
+}
+.info.caards{background-color: #132841;
+} /*cada um dos cards das informações estão aqui*/
+
+
+.bordacards {
+    border: 1px solid #ffffffcc;
+}
+
+/*VAZAO RESFRIADOR*/
+.info.caards.vazao.bordacards h1{
     background-color: #132841;
     display: flex;
-    margin-left: 58px;
+    justify-content: center;
+    align-items: center;
+    margin-right: 50px;
     margin-top: 30px;
 }
-.info.caards.corrente_eletrica.bordacards h2{
+.info.caards.vazao.bordacards h2{
     display: flex;
     background-color: #132841;
     justify-content: left;
@@ -395,7 +520,7 @@ html{
     font-size: 2.5rem;
 }
 
-.info.caards.corrente_eletrica.bordacards h4{
+.info.caards.vazao.bordacards h4{
     background-color: #132841;
     display: flex;
     justify-content: center;
