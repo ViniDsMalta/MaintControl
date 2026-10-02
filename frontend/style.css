@@ -40,12 +40,12 @@ html{
     /* removido: position: fixed, top, right, z-index (agora vêm do .nav-bar) */
 }
 
-.menu-toggle {
+/*.menu-toggle {
     display: flex;
     flex-direction: column;
     cursor: pointer;
-    /* removido: position: fixed, top, right, z-index (agora vêm do .nav-bar) */
-}
+ removido: position: fixed, top, right, z-index (agora vêm do .nav-bar) 
+} */
 .logo {
     height: 400px;
     width: auto;
@@ -55,21 +55,26 @@ html{
     left: -10px;
 }
 
-.menu-toggle span{
-    /*linhas do botao*/
+/*.menu-toggle span{
+    linhas do botao
     width: 25px;
     height: 3px;
     background-color: #fff !important;
     margin: 4px 0;
     transition: 0.3s;
     border-radius: 15px;
-}
+} */
 
 .menu a{
     text-decoration: none;
     color: rgb(255, 255, 255);
     font-size: 18px;
     background-color: transparent;
+}
+
+.menu a.active {
+    color: #2ec064;
+    font-weight: bold;
 }
 
 #menu a{
