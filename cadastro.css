@@ -1,0 +1,151 @@
+body{
+    background-color: #111827;
+}
+
+.elementos{
+    display: flex;
+    justify-content: space-between;
+    width: 1897px;
+    height: 890px;
+}
+
+.card{
+    background-color: #132841;
+    height: 500px;
+    width: 600px;
+    margin-top: 175px;
+    margin-right: 200px;
+    border-radius: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 40px;
+    gap: 20px; /* espaço uniforme entre TODOS os filhos diretos do card */
+}
+
+.card h1{
+    color: white;
+    font-size: 40px;
+    margin-bottom: 100px; /* espaço entre o título e o primeiro input */
+}
+
+.card input{
+    width: 25rem;
+    height: 3rem;
+    border-radius: 15px;
+    border: none;
+    padding-left: 15px;
+    box-sizing: border-box;
+    transition: background-color 0.1s ease;
+}
+.card input:hover{
+    background-color: #f3f3f3; /* levemente mais escuro que a cor base */
+}
+.card input:focus{
+    outline: none; /* remove o contorno azul padrão do navegador */
+    border-color: #2ec064; /* destaca a borda com a cor de destaque do site */
+    background-color: #e9e9e9;
+}
+.card button{
+    height: 60px;
+    width: 150px;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 15px;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.1s ease;
+}
+
+.card button:hover{
+    background-color: #dadada; /* uma versão um pouco mais escura da cor base */
+}
+.card button p{
+    margin: 0; /* remove a margem padrão do <p>, que empurraria o texto pro canto */
+}
+.card.caixa-texto2{
+    margin-top: 10px;
+    width: 25rem;
+    margin-left: 30px;
+    height: 3rem;
+}
+
+.textos{
+    height: max-content;
+    width: max-content;
+    margin-top: 300px;
+    margin-left: 300px;
+}
+.textos h1{
+    color: white;
+    font-size: 40px;
+}
+.textos h2{
+    margin-top: 100px;
+    color: white;
+    font-size: 30px;
+}
+
+
+
+.requisitos {
+    list-style: none;
+    padding: 0;
+    margin: 0; 
+    width: 25rem;
+    display: none;
+    flex-wrap: wrap;
+    gap: 8px 16px;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+.requisitos.visivel {
+    display: flex; /* trocado de "block" pra "flex", pra alinhar em linha */
+}
+
+.requisitos li {
+    color: #ef4444;
+    font-size: 12px; /* <- AQUI você controla o tamanho da fonte dos requisitos */
+    margin-bottom: 0; /* removido, já que o "gap" do pai cuida do espaçamento agora */
+    display: flex;
+    align-items: center;
+    gap: 4px; /* espaço entre o ícone (✓/✕) e o texto de cada item */
+    white-space: nowrap; /* evita que "1 letra maiúscula" quebre no meio */
+    transition: color 0.2s ease;
+}
+
+.requisitos li.ok {
+    color: #2ec064;
+}
+
+.icone {
+    font-weight: bold;
+}
+
+.email-erro {
+    color: #ef4444;
+    font-size: 13px;
+    margin: 0; 
+    width: 25rem;
+    display: none;
+    text-align: center;
+}
+
+.email-erro.visivel {
+    display: block;
+}
+
+.senha-erro {
+    color: #ef4444;
+    font-size: 13px;
+    margin: 0; 
+    width: 25rem;
+    display: none;
+    text-align: center;
+}
+
+.senha-erro.visivel {
+    display: block;
+}
