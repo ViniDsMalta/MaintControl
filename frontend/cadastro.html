@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cadastro</title>
+    <link rel="stylesheet" href="./cadastro.css">
+</head>
+<body>
+    <section class="main">
+        <div class="elementos">
+            <div class="textos">
+                <h1>Seja Bem-vindo(a)!</h1>
+                <h2>Coloque o seu email e crie uma nova senha!</h2>
+            </div>
+            <div class="card">
+                <h1>Cadastro</h1>
+            <input type="text" class="caixa-texto" placeholder="E-mail" id="email">
+            <input type="password" class="caixa-texto2" placeholder="Senha" id="senha">
+
+            <ul class="requisitos" id="requisitos">
+                <li id="req-maiuscula"><span class="icone">✕</span> 1 letra maiúscula</li>
+                <li id="req-minuscula"><span class="icone">✕</span> 1 letra minúscula</li>
+                <li id="req-numero"><span class="icone">✕</span> 1 número</li>
+                <li id="req-especial"><span class="icone">✕</span> 1 caractere especial</li>
+                <li id="req-tamanho"><span class="icone">✕</span> 8 caracteres</li>
+            </ul>
+
+            <p class="senha-erro" id="senha-erro"></p>
+            <p class="email-erro" id="email-erro"></p>
+
+            <button type="button" id="btn-cadastro">
+                <p>Login</p>
+            </button>
+            </div>
+        
+        </div>
+        
+
+    </section>
+    <script src="./script.js"></script>
+</body>
+</html>
