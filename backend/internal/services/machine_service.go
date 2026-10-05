@@ -29,7 +29,7 @@ func (s *MachineService) Create(ctx context.Context, userID, name, machineType s
 	}
 
 	name = strings.TrimSpace(name)
-	machineType = strings.TrimSpace(machineType)
+	machineType = strings.ToLower(strings.TrimSpace(machineType))
 	if !validName(name) || !validType(machineType) {
 		return models.Machine{}, ErrInvalidInput
 	}
@@ -72,7 +72,7 @@ func (s *MachineService) Update(ctx context.Context, userID, id, name, machineTy
 	}
 
 	name = strings.TrimSpace(name)
-	machineType = strings.TrimSpace(machineType)
+	machineType = strings.ToLower(strings.TrimSpace(machineType))
 	if !validName(name) || !validType(machineType) {
 		return models.Machine{}, ErrInvalidInput
 	}

@@ -1,0 +1,6 @@
+data/
+results/
+tests/
+.matplotlib/
+__pycache__/
+*.pyc

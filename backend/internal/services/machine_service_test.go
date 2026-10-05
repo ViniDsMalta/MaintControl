@@ -55,6 +55,27 @@ func TestMachineIsolationBetweenUsers(t *testing.T) {
 	}
 }
 
+func TestMachineTypeValidationAndNormalization(t *testing.T) {
+	store := newFakeMachineStore()
+	service := NewMachineService(store)
+
+	created, err := service.Create(context.Background(), testUserA, "Bomba Principal", " Bomba ")
+	if err != nil {
+		t.Fatalf("expected valid pump type, got %v", err)
+	}
+	if created.Type != "bomba" {
+		t.Fatalf("expected normalized type bomba, got %q", created.Type)
+	}
+
+	if _, err := service.Create(context.Background(), testUserA, "Esteira Principal", "esteira"); err != ErrInvalidInput {
+		t.Fatalf("expected invalid input for unsupported type, got %v", err)
+	}
+
+	if _, err := service.Update(context.Background(), testUserA, created.ID, "Bomba Principal", "forno"); err != ErrInvalidInput {
+		t.Fatalf("expected invalid input when updating to unsupported type, got %v", err)
+	}
+}
+
 type fakeMachineStore struct {
 	items map[string]models.Machine
 }

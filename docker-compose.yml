@@ -29,6 +29,8 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
+      ia-service:
+        condition: service_healthy
     environment:
       DB_HOST: postgres
       DB_PORT: 5432
@@ -36,9 +38,67 @@ services:
       DB_PASSWORD: ${DB_PASSWORD:-admin}
       DB_NAME: ${DB_NAME:-industrial_monitoring}
       JWT_SECRET: ${JWT_SECRET:-maintcontrol-dev-secret-change-me}
+      AI_SERVICE_URL: http://ia-service:8000
+      AI_SERVICE_TIMEOUT: ${AI_SERVICE_TIMEOUT:-5s}
+      SIMULATOR_TOKEN: ${SIMULATOR_TOKEN:-maintcontrol-simulator-secret}
       SERVER_PORT: 8080
     ports:
       - "8080:8080"
+
+    healthcheck:
+      test: ["CMD", "/app/maintcontrol-api", "healthcheck"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  ia-service:
+    build:
+      context: ./IA
+    container_name: maintcontrol_ai
+    environment:
+      AI_HOST: 0.0.0.0
+      AI_PORT: 8000
+      AI_MODELS_DIR: /app/models
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health', timeout=3)"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+      start_period: 10s
+
+  simulator:
+    build:
+      context: .
+      dockerfile: simulator/Dockerfile
+    container_name: maintcontrol_simulator
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      BACKEND_URL: http://backend:8080
+      SIMULATOR_TOKEN: ${SIMULATOR_TOKEN:-maintcontrol-simulator-secret}
+      SIMULATION_INTERVAL: ${SIMULATION_INTERVAL:-5}
+      MACHINE_REFRESH_INTERVAL: ${MACHINE_REFRESH_INTERVAL:-15}
+      SIMULATION_NORMAL_READINGS: ${SIMULATION_NORMAL_READINGS:-45}
+      SIMULATION_DEGRADATION_READINGS: ${SIMULATION_DEGRADATION_READINGS:-35}
+      SIMULATION_FAILURE_READINGS: ${SIMULATION_FAILURE_READINGS:-30}
+
+  frontend-test:
+    build:
+      context: ./frontend/teste
+    container_name: maintcontrol_frontend_test
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "3000:80"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://127.0.0.1/"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
 volumes:
   postgres_data:

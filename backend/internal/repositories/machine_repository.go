@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"context"
+	"time"
 
 	"MaintControl/internal/models"
 	"MaintControl/internal/services"
@@ -19,7 +20,13 @@ func NewMachineRepository(db *pgxpool.Pool) *MachineRepository {
 }
 
 func (r *MachineRepository) Create(ctx context.Context, machine models.Machine) (models.Machine, error) {
-	err := r.db.QueryRow(ctx,
+	tx, err := r.db.Begin(ctx)
+	if err != nil {
+		return models.Machine{}, err
+	}
+	defer func() { _ = tx.Rollback(ctx) }()
+
+	err = tx.QueryRow(ctx,
 		`INSERT INTO machines (id, user_id, name, type, api_key)
 		 VALUES ($1, $2, $3, $4, $5)
 		 RETURNING created_at`,
@@ -29,22 +36,29 @@ func (r *MachineRepository) Create(ctx context.Context, machine models.Machine) 
 		return models.Machine{}, err
 	}
 
-	_, _ = r.db.Exec(ctx,
+	status := models.MachineStatus{MachineID: machine.ID, Status: models.StatusWaitingData}
+	if err := tx.QueryRow(ctx,
 		`INSERT INTO machine_status (machine_id, health_score, risk_score, status)
-		 VALUES ($1, 100, 0, 'Normal')
-		 ON CONFLICT (machine_id) DO NOTHING`,
+		 VALUES ($1, NULL, NULL, $2)
+		 RETURNING updated_at`,
 		machine.ID,
-	)
+		status.Status,
+	).Scan(&status.UpdatedAt); err != nil {
+		return models.Machine{}, err
+	}
+	if err := tx.Commit(ctx); err != nil {
+		return models.Machine{}, err
+	}
+	machine.Status = &status
 
 	return machine, nil
 }
 
 func (r *MachineRepository) ListByUser(ctx context.Context, userID string) ([]models.Machine, error) {
 	rows, err := r.db.Query(ctx,
-		`SELECT id, user_id, name, type, api_key, created_at
-		 FROM machines
-		 WHERE user_id = $1
-		 ORDER BY created_at DESC`,
+		machineWithStatusQuery+`
+		 WHERE m.user_id = $1
+		 ORDER BY m.created_at DESC`,
 		userID,
 	)
 	if err != nil {
@@ -55,7 +69,7 @@ func (r *MachineRepository) ListByUser(ctx context.Context, userID string) ([]mo
 	machines := []models.Machine{}
 	for rows.Next() {
 		var machine models.Machine
-		if err := rows.Scan(&machine.ID, &machine.UserID, &machine.Name, &machine.Type, &machine.APIKey, &machine.CreatedAt); err != nil {
+		if err := scanMachine(rows, &machine); err != nil {
 			return nil, err
 		}
 		machines = append(machines, machine)
@@ -66,12 +80,7 @@ func (r *MachineRepository) ListByUser(ctx context.Context, userID string) ([]mo
 
 func (r *MachineRepository) GetByIDForUser(ctx context.Context, id, userID string) (models.Machine, error) {
 	var machine models.Machine
-	err := r.db.QueryRow(ctx,
-		`SELECT id, user_id, name, type, api_key, created_at
-		 FROM machines
-		 WHERE id = $1 AND user_id = $2`,
-		id, userID,
-	).Scan(&machine.ID, &machine.UserID, &machine.Name, &machine.Type, &machine.APIKey, &machine.CreatedAt)
+	err := scanMachine(r.db.QueryRow(ctx, machineWithStatusQuery+` WHERE m.id = $1 AND m.user_id = $2`, id, userID), &machine)
 	if err == pgx.ErrNoRows {
 		return models.Machine{}, services.ErrNotFound
 	}
@@ -97,11 +106,30 @@ func (r *MachineRepository) UpdateForUser(ctx context.Context, machine models.Ma
 		return models.Machine{}, err
 	}
 
-	return machine, nil
+	return r.GetByIDForUser(ctx, machine.ID, machine.UserID)
 }
 
 func (r *MachineRepository) DeleteForUser(ctx context.Context, id, userID string) error {
-	tag, err := r.db.Exec(ctx, `DELETE FROM machines WHERE id = $1 AND user_id = $2`, id, userID)
+	tx, err := r.db.Begin(ctx)
+	if err != nil {
+		return err
+	}
+	defer func() { _ = tx.Rollback(ctx) }()
+
+	var exists bool
+	if err := tx.QueryRow(ctx, `SELECT EXISTS(SELECT 1 FROM machines WHERE id = $1 AND user_id = $2)`, id, userID).Scan(&exists); err != nil {
+		return err
+	}
+	if !exists {
+		return services.ErrNotFound
+	}
+	if _, err := tx.Exec(ctx, `DELETE FROM telemetry WHERE machine_id = $1`, id); err != nil {
+		return err
+	}
+	if _, err := tx.Exec(ctx, `DELETE FROM machine_status WHERE machine_id = $1`, id); err != nil {
+		return err
+	}
+	tag, err := tx.Exec(ctx, `DELETE FROM machines WHERE id = $1 AND user_id = $2`, id, userID)
 	if err != nil {
 		return err
 	}
@@ -109,5 +137,76 @@ func (r *MachineRepository) DeleteForUser(ctx context.Context, id, userID string
 		return services.ErrNotFound
 	}
 
+	return tx.Commit(ctx)
+}
+
+func (r *MachineRepository) GetByAPIKey(ctx context.Context, apiKey string) (models.Machine, error) {
+	var machine models.Machine
+	err := scanMachine(r.db.QueryRow(ctx, machineWithStatusQuery+` WHERE m.api_key = $1`, apiKey), &machine)
+	if err == pgx.ErrNoRows {
+		return models.Machine{}, services.ErrNotFound
+	}
+	if err != nil {
+		return models.Machine{}, err
+	}
+	return machine, nil
+}
+
+func (r *MachineRepository) ListAll(ctx context.Context) ([]models.Machine, error) {
+	rows, err := r.db.Query(ctx, machineWithStatusQuery+` ORDER BY m.created_at ASC`)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	machines := []models.Machine{}
+	for rows.Next() {
+		var machine models.Machine
+		if err := scanMachine(rows, &machine); err != nil {
+			return nil, err
+		}
+		machines = append(machines, machine)
+	}
+	return machines, rows.Err()
+}
+
+const machineWithStatusQuery = `SELECT
+		m.id, m.user_id, m.name, m.type, m.api_key, m.created_at,
+		ms.health_score, ms.risk_score, ms.status, ms.updated_at
+	 FROM machines m
+	 LEFT JOIN machine_status ms ON ms.machine_id = m.id`
+
+type rowScanner interface {
+	Scan(dest ...any) error
+}
+
+func scanMachine(row rowScanner, machine *models.Machine) error {
+	var healthScore, riskScore *float64
+	var status *string
+	var updatedAt *time.Time
+	err := row.Scan(
+		&machine.ID,
+		&machine.UserID,
+		&machine.Name,
+		&machine.Type,
+		&machine.APIKey,
+		&machine.CreatedAt,
+		&healthScore,
+		&riskScore,
+		&status,
+		&updatedAt,
+	)
+	if err != nil {
+		return err
+	}
+	if status != nil && updatedAt != nil {
+		machine.Status = &models.MachineStatus{
+			MachineID:   machine.ID,
+			HealthScore: healthScore,
+			RiskScore:   riskScore,
+			Status:      *status,
+			UpdatedAt:   *updatedAt,
+		}
+	}
 	return nil
 }

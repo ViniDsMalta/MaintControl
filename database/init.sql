@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS production_line_machines (
 CREATE TABLE IF NOT EXISTS telemetry (
     id BIGSERIAL PRIMARY KEY,
 
-    machine_id UUID NOT NULL REFERENCES machines(id),
+    machine_id UUID NOT NULL REFERENCES machines(id) ON DELETE CASCADE,
 
     temperature DOUBLE PRECISION,
 
@@ -57,13 +57,13 @@ CREATE TABLE IF NOT EXISTS telemetry (
     created_at TIMESTAMP DEFAULT NOW()
 );
 CREATE TABLE IF NOT EXISTS machine_status (
-    machine_id UUID PRIMARY KEY REFERENCES machines(id),
+    machine_id UUID PRIMARY KEY REFERENCES machines(id) ON DELETE CASCADE,
 
     health_score DOUBLE PRECISION,
 
     risk_score DOUBLE PRECISION,
 
-    status VARCHAR(50) not NULL DEFAULT 'Desconhecido',
+    status VARCHAR(50) NOT NULL DEFAULT 'AGUARDANDO_DADOS',
 
     updated_at TIMESTAMP DEFAULT NOW()
 );

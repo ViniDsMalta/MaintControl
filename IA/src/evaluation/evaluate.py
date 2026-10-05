@@ -3,7 +3,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-import mapyttplotlib
+import matplotlib
 
 matplotlib.use("Agg")
 

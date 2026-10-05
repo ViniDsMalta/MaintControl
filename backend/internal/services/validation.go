@@ -20,6 +20,10 @@ func validName(value string) bool {
 }
 
 func validType(value string) bool {
-	value = strings.TrimSpace(value)
-	return len(value) >= 2 && len(value) <= 50
+	switch value {
+	case "motor", "bomba", "compressor":
+		return true
+	default:
+		return false
+	}
 }
