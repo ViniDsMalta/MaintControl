@@ -20,24 +20,32 @@ html{
     /* removido: position: fixed; top: 0; left: 0; */
 }
 
-.menu{
-    display: flex;
-    gap: 20px;
+.nav-bar {
     position: fixed;
-    top: 20px;   /* ajuste pra alinhar na altura que quiser */
-    right: 200px; /* ajuste pra posicionar horizontalmente perto do toggle */
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: rgba(17, 24, 39, 0.3); /* mesma cor #111827, mas com 70% de opacidade */
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 30px;
+    padding: 14px 80px;
     z-index: 1100;
 }
 
-.menu-toggle {
+.menu {
+    display: flex;
+    gap: 20px;
+    /* removido: position: fixed, top, right, z-index (agora vêm do .nav-bar) */
+}
+
+/*.menu-toggle {
     display: flex;
     flex-direction: column;
     cursor: pointer;
-    position: fixed;
-    top: 20px;
-    right: 80px; /* mesma margem lateral do padding original do header */
-    z-index: 1100;
-}
+ removido: position: fixed, top, right, z-index (agora vêm do .nav-bar) 
+} */
 .logo {
     height: 400px;
     width: auto;
@@ -47,23 +55,31 @@ html{
     left: -10px;
 }
 
-.menu-toggle span{
-    /*linhas do botao*/
+/*.menu-toggle span{
+    linhas do botao
     width: 25px;
     height: 3px;
     background-color: #fff !important;
     margin: 4px 0;
     transition: 0.3s;
     border-radius: 15px;
-}
+} */
 
 .menu a{
-    margin: 15px 0;
     text-decoration: none;
     color: rgb(255, 255, 255);
     font-size: 18px;
+    background-color: transparent;
 }
 
+.menu a.active {
+    color: #2ec064;
+    font-weight: bold;
+}
+
+#menu a{
+    background-color: transparent !important;
+}
 .dashboard{
     padding-top: 20px; /* para não ficar embaixo do header */
     min-height: 700px;
@@ -137,7 +153,7 @@ html{
     height: 30rem;
     justify-content: center;
     background-color: #182135;
-    border-color: #808080 ;
+    border: 1px solid #ffffffff;
 }
 
 .cardd.misturador h1{
@@ -146,19 +162,431 @@ html{
     background-color: #182135;
     margin-left: 70px;
 }
-.cardd.misturador h2{
+.cardd.misturador > h2{
     margin-top: -35px;
     font-size: 1.5rem;
     background-color: #182135;
     margin-left: 80rem;
+    
 }
 .cardd.misturador img{
     margin-left: 40rem;
     margin-top: 3rem;
     height: 20rem;
     background-color: #182135;
+    
 
 }
-.cardd.info.misturador{
-    height: 50rem;
+.cardd.info.misturador{ /*segundo card(o maior) do misturador. dentro dele esta o inf-cards e os info.misturador1*/
+    height: 87rem;
+    border: 1px solid #ffffffff;
+}
+
+.info-cards {
+    display: flex;
+    gap: 10rem;
+    padding: 150px 80px 20px; /* top 100px é suficiente pra um header de ~90px de altura */
+    flex-wrap: wrap;
+    height: 85rem;
+    background-color: #182135;
+}
+.info {
+    width: 350px;
+    height: 500px;
+    border-radius: 20px;
+    background-color: #1F2937;
+    border: 1px solid #374151;
+}
+.info.caards{background-color: #132841;
+} /*cada um dos cards das informações estão aqui*/
+
+
+.bordacards {
+    border: 1px solid #ffffffcc;
+}
+ /*TEMPERATURA MISTURADOR*/
+.info.caards.temperatura.bordacards h1{
+    background-color: #132841;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 50px;
+    margin-top: 30px;
+}
+.info.caards.temperatura.bordacards h2{
+    display: flex;
+    justify-content: left;
+    background-color: #132841;
+    margin-top: 7.5rem;
+    margin-left: 4rem;
+    font-size: 2.5rem;
+    width: fit-content;
+}
+.info.caards.temperatura.bordacards h4{
+    display: flex;
+    justify-content: center;
+    background-color: #132841;
+    font-size: 25px;
+    margin-top: 6rem;
+}
+
+/*CORRENTE ELETRICA MISTURADOR*/
+.info.caards.corrente_eletrica.bordacards h1{
+    background-color: #132841;
+    display: flex;
+    margin-left: 58px;
+    margin-top: 30px;
+}
+.info.caards.corrente_eletrica.bordacards h2{
+    display: flex;
+    background-color: #132841;
+    justify-content: left;
+    width: fit-content;
+    margin-top: 7.5rem;
+    margin-left: 4rem;
+    font-size: 2.5rem;
+}
+
+.info.caards.corrente_eletrica.bordacards h4{
+    background-color: #132841;
+    display: flex;
+    justify-content: center;
+    font-size: 25px;
+    margin-top: 6rem;
+}
+
+/*TENSAO MISTURADOR*/
+.info.caards.tensao.bordacards h1{
+    background-color: #132841;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 50px;
+    margin-top: 30px;
+}
+.info.caards.tensao.bordacards h2{
+    display: flex;
+    background-color: #132841;
+    justify-content: left;
+    width: fit-content;
+    margin-top: 7.5rem;
+    margin-left: 4rem;
+    font-size: 2.5rem;
+}
+
+.info.caards.tensao.bordacards h4{
+    background-color: #132841;
+    display: flex;
+    justify-content: center;
+    font-size: 25px;
+    margin-top: 6rem;
+}
+/*ROTACAO MISTURADOR*/
+.info.caards.rotacao.bordacards h1{
+    background-color: #132841;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 50px;
+    margin-top: 30px;
+}
+.info.caards.rotacao.bordacards h2{
+    display: flex;
+    background-color: #132841;
+    justify-content: left;
+    width: fit-content;
+    margin-top: 7.5rem;
+    margin-left: 4rem;
+    font-size: 2.5rem;
+}
+
+.info.caards.rotacao.bordacards h4{
+    background-color: #132841;
+    display: flex;
+    justify-content: center;
+    font-size: 25px;
+    margin-top: 6rem;
+}
+
+/*FERMENTADORA*/
+.cardd.fermentadora{
+    margin-left: 100px;
+    width: 100rem;
+    height: 30rem;
+    justify-content: center;
+    background-color: #182135;
+    border: 1px solid #ffffffff;
+    margin-top: 150px;
+}
+
+.cardd.fermentadora h1{
+    font-size: 2rem;
+    margin-top: 10px;
+    background-color: #182135;
+    margin-left: 70px;
+}
+.cardd.fermentadora > h2{
+    margin-top: -35px;
+    font-size: 1.5rem;
+    background-color: #182135;
+    margin-left: 80rem;
+    
+}
+.cardd.fermentadora img{
+    margin-left: 25rem;
+    margin-top: 3rem;
+    height: 20rem;
+    background-color: #182135;
+    
+
+}
+.cardd.info.fermentadora{ /*segundo card(o maior) do fermentador. dentro dele esta o inf-cards e os info.fermentadora1*/
+    height: 47rem;
+    border: 1px solid #ffffffff;
+    margin-top: 0;
+}
+
+.info-cards {
+    display: flex;
+    gap: 10rem;
+    padding: 150px 80px 20px; /* top 100px é suficiente pra um header de ~90px de altura */
+    flex-wrap: wrap;
+    height: 45rem;
+    background-color: #182135;
+}
+.info {
+    width: 350px;
+    height: 500px;
+    border-radius: 20px;
+    background-color: #1F2937;
+    border: 1px solid #374151;
+}
+.info.caards{background-color: #132841;
+} /*cada um dos cards das informações estão aqui*/
+
+
+.bordacards {
+    border: 1px solid #ffffffcc;
+}
+
+
+/*FORNO*/
+.cardd.forno{
+    margin-left: 100px;
+    width: 100rem;
+    height: 30rem;
+    justify-content: center;
+    background-color: #182135;
+    border: 1px solid #ffffffff;
+    margin-top: 150px;
+}
+
+.cardd.forno h1{
+    font-size: 2rem;
+    margin-top: 10px;
+    background-color: #182135;
+    margin-left: 70px;
+}
+.cardd.forno > h2{
+    margin-top: -35px;
+    font-size: 1.5rem;
+    background-color: #182135;
+    margin-left: 80rem;
+    
+}
+.cardd.forno img{
+    margin-left: 42rem;
+    margin-top: 3rem;
+    height: 20rem;
+    background-color: #182135;
+
+}
+.cardd.info.forno{ /*segundo card(o maior) do forno. dentro dele esta o inf-cards e os info.fermentadora1*/
+    height: 87rem;
+    border: 1px solid #ffffffff;
+    margin-top: 0;
+}
+
+.info-cards {
+    display: flex;
+    gap: 10rem;
+    padding: 150px 80px 20px; /* top 100px é suficiente pra um header de ~90px de altura */
+    flex-wrap: wrap;
+    height: 45rem;
+    background-color: #182135;
+}
+.info {
+    width: 350px;
+    height: 500px;
+    border-radius: 20px;
+    background-color: #1F2937;
+    border: 1px solid #374151;
+}
+.info.caards{background-color: #132841;
+} /*cada um dos cards das informações estão aqui*/
+
+
+.bordacards {
+    border: 1px solid #ffffffcc;
+}
+
+/*VAZAO FORNO*/
+.info.caards.vazao.bordacards h1{
+    background-color: #132841;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 50px;
+    margin-top: 30px;
+}
+.info.caards.vazao.bordacards h2{
+    display: flex;
+    background-color: #132841;
+    justify-content: left;
+    width: fit-content;
+    margin-top: 7.5rem;
+    margin-left: 4rem;
+    font-size: 2.5rem;
+}
+
+.info.caards.vazao.bordacards h4{
+    background-color: #132841;
+    display: flex;
+    justify-content: center;
+    font-size: 25px;
+    margin-top: 6rem;
+}
+
+/*RESFRIADOR*/
+.cardd.resfriador{
+    margin-left: 100px;
+    width: 100rem;
+    height: 30rem;
+    justify-content: center;
+    background-color: #182135;
+    border: 1px solid #ffffffff;
+    margin-top: 150px;
+}
+
+.cardd.resfriador h1{
+    font-size: 2rem;
+    margin-top: 10px;
+    background-color: #182135;
+    margin-left: 70px;
+}
+.cardd.resfriador > h2{
+    margin-top: -35px;
+    font-size: 1.5rem;
+    background-color: #182135;
+    margin-left: 80rem;
+    
+}
+.cardd.resfriador img{
+    margin-left: 33rem;
+    margin-top: 3rem;
+    height: 20rem;
+    background-color: #182135;
+
+}
+.cardd.info.resfriador{ /*segundo card(o maior) do forno. dentro dele esta o inf-cards e os info.fermentadora1*/
+    height: 87rem;
+    border: 1px solid #ffffffff;
+    margin-top: 0;
+}
+
+.info-cards {
+    display: flex;
+    gap: 10rem;
+    padding: 150px 80px 20px; /* top 100px é suficiente pra um header de ~90px de altura */
+    flex-wrap: wrap;
+    height: 45rem;
+    background-color: #182135;
+}
+.info {
+    width: 350px;
+    height: 500px;
+    border-radius: 20px;
+    background-color: #1F2937;
+    border: 1px solid #374151;
+}
+.info.caards{background-color: #132841;
+} /*cada um dos cards das informações estão aqui*/
+
+
+.bordacards {
+    border: 1px solid #ffffffcc;
+}
+
+/*VAZAO RESFRIADOR*/
+.info.caards.vazao.bordacards h1{
+    background-color: #132841;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 50px;
+    margin-top: 30px;
+}
+.info.caards.vazao.bordacards h2{
+    display: flex;
+    background-color: #132841;
+    justify-content: left;
+    width: fit-content;
+    margin-top: 7.5rem;
+    margin-left: 4rem;
+    font-size: 2.5rem;
+}
+
+.info.caards.vazao.bordacards h4{
+    background-color: #132841;
+    display: flex;
+    justify-content: center;
+    font-size: 25px;
+    margin-top: 6rem;
+}
+
+/*FOOTER*/
+
+.footer {
+    width: 100%;
+    margin-top: 10rem;
+    padding: 30px 80px;
+    background-color: #000000;
+    text-align: center;
+    border-top: 1px solid #374151;
+    height: 20rem;
+    display: flex;
+    justify-content: space-between;
+}
+.footer-links a{
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+    background-color: transparent;
+    display: flex;
+    font-size: 25px;
+}
+
+.footer-links {
+    background-color: #000000;
+    display: flex;
+    flex-direction: column;
+    justify-content: left;
+    margin-top: 10px;
+    gap: 20px;
+}
+/* .footer p {
+    font-size: 14px;
+    background-color: #000000;
+} */
+.footer-info {
+    display: flex;
+    flex-direction: column;
+    font-size: 25px;
+    gap: 25px;
+    margin-top: 10px;
+    align-items: start;
+    background-color: #000000;
+}
+.footer-info p{
+    background-color: black;
+    text-align: left;
 }
