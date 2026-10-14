@@ -18,7 +18,19 @@ async function request(path, { method = "GET", token, body } = {}) {
 
   const data = response.status === 204 ? null : await response.json().catch(() => null);
   if (!response.ok) {
-    throw new Error(data?.error || `Erro HTTP ${response.status}`);
+    const messages = {
+      "invalid input": "Confira os dados informados.",
+      "invalid credentials": "E-mail ou senha incorretos.",
+      "email already exists": "Este e-mail já está cadastrado.",
+      "not found": "Registro não encontrado.",
+      "duplicate association": "Esta máquina já pertence ao fluxo.",
+      "duplicate position": "Esta posição já está ocupada.",
+      unauthorized: "Sua sessão expirou. Entre novamente.",
+    };
+    const message = data?.error || `Erro HTTP ${response.status}`;
+    const error = new Error(messages[message] || message);
+    error.status = response.status;
+    throw error;
   }
   return data;
 }

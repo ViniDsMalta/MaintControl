@@ -69,6 +69,7 @@ services:
       start_period: 10s
 
   simulator:
+    profiles: ["simulator"]
     build:
       context: .
       dockerfile: simulator/Dockerfile
@@ -84,6 +85,8 @@ services:
       SIMULATION_NORMAL_READINGS: ${SIMULATION_NORMAL_READINGS:-45}
       SIMULATION_DEGRADATION_READINGS: ${SIMULATION_DEGRADATION_READINGS:-35}
       SIMULATION_FAILURE_READINGS: ${SIMULATION_FAILURE_READINGS:-30}
+      SIMULATION_MODE: ${SIMULATION_MODE:-cycle}
+      SIMULATION_SEVERITY: ${SIMULATION_SEVERITY:-1}
 
   frontend-test:
     build:

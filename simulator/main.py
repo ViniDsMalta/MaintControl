@@ -19,7 +19,10 @@ MACHINE_REFRESH_INTERVAL = float(os.getenv("MACHINE_REFRESH_INTERVAL", "15"))
 NORMAL_READINGS = int(os.getenv("SIMULATION_NORMAL_READINGS", "45"))
 DEGRADATION_READINGS = int(os.getenv("SIMULATION_DEGRADATION_READINGS", "35"))
 FAILURE_READINGS = int(os.getenv("SIMULATION_FAILURE_READINGS", "30"))
+SIMULATION_MODE = os.getenv("SIMULATION_MODE", "cycle").strip().lower()
+SIMULATION_SEVERITY = float(os.getenv("SIMULATION_SEVERITY", "1"))
 TYPE_MAPPING = {"motor": "motor", "bomba": "pump", "compressor": "compressor"}
+FORCED_STATES = {"normal": "NORMAL", "degradation": "DEGRADATION", "failure": "FAILURE"}
 
 
 @dataclass
@@ -32,6 +35,12 @@ class SimulatedMachine:
     tick: int = 0
 
     def next_reading(self) -> tuple[str, dict[str, float]]:
+        if SIMULATION_MODE in FORCED_STATES:
+            state = FORCED_STATES[SIMULATION_MODE]
+            reading = self.generator.next_reading(state, SIMULATION_SEVERITY)
+            self.tick += 1
+            return state, reading
+
         cycle_length = NORMAL_READINGS + DEGRADATION_READINGS + FAILURE_READINGS
         position = self.tick % cycle_length
         if position < NORMAL_READINGS:
@@ -108,6 +117,24 @@ def send_reading(machine: SimulatedMachine) -> None:
 
 def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+    if SIMULATION_MODE not in {"cycle", *FORCED_STATES}:
+        raise ValueError("SIMULATION_MODE must be cycle, normal, degradation, or failure")
+    if not 0 <= SIMULATION_SEVERITY <= 1:
+        raise ValueError("SIMULATION_SEVERITY must be between 0 and 1")
+    if min(NORMAL_READINGS, DEGRADATION_READINGS, FAILURE_READINGS) < 0:
+        raise ValueError("simulation reading counts cannot be negative")
+    if SIMULATION_MODE == "cycle" and NORMAL_READINGS + DEGRADATION_READINGS + FAILURE_READINGS == 0:
+        raise ValueError("cycle mode requires at least one reading")
+
+    logging.info(
+        "Simulator mode=%s severity=%.2f interval=%.2fs cycle=%s/%s/%s",
+        SIMULATION_MODE,
+        SIMULATION_SEVERITY,
+        SIMULATION_INTERVAL,
+        NORMAL_READINGS,
+        DEGRADATION_READINGS,
+        FAILURE_READINGS,
+    )
     machines: dict[str, SimulatedMachine] = {}
     last_refresh = 0.0
 
