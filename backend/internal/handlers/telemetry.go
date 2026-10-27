@@ -23,7 +23,7 @@ func (h *TelemetryHandler) Receive(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var reading models.TelemetryReading
-	if err := decodeJSON(r, &reading); err != nil {
+	if err := decodeJSON(w, r, &reading); err != nil {
 		writeError(w, http.StatusBadRequest, "invalid json")
 		return
 	}

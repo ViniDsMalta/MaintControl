@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 import logging
+import math
 import os
 import time
 import urllib.error
@@ -85,7 +86,11 @@ def discover_machines(current: dict[str, SimulatedMachine]) -> dict[str, Simulat
             logging.warning("Ignoring machine %s with unsupported type %s", machine["id"], machine_type)
             continue
         existing = current.get(machine["id"])
-        if existing is not None and existing.api_key == machine["api_key"]:
+        if (
+            existing is not None
+            and existing.api_key == machine["api_key"]
+            and existing.public_type == machine_type
+        ):
             existing.name = machine["name"]
             discovered[machine["id"]] = existing
             continue
@@ -119,8 +124,12 @@ def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     if SIMULATION_MODE not in {"cycle", *FORCED_STATES}:
         raise ValueError("SIMULATION_MODE must be cycle, normal, degradation, or failure")
-    if not 0 <= SIMULATION_SEVERITY <= 1:
+    if not math.isfinite(SIMULATION_SEVERITY) or not 0 <= SIMULATION_SEVERITY <= 1:
         raise ValueError("SIMULATION_SEVERITY must be between 0 and 1")
+    if not math.isfinite(SIMULATION_INTERVAL) or SIMULATION_INTERVAL <= 0:
+        raise ValueError("SIMULATION_INTERVAL must be greater than zero")
+    if not math.isfinite(MACHINE_REFRESH_INTERVAL) or MACHINE_REFRESH_INTERVAL <= 0:
+        raise ValueError("MACHINE_REFRESH_INTERVAL must be greater than zero")
     if min(NORMAL_READINGS, DEGRADATION_READINGS, FAILURE_READINGS) < 0:
         raise ValueError("simulation reading counts cannot be negative")
     if SIMULATION_MODE == "cycle" and NORMAL_READINGS + DEGRADATION_READINGS + FAILURE_READINGS == 0:

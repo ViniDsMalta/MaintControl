@@ -23,8 +23,8 @@ async function request(path, { method = "GET", token, body } = {}) {
       "invalid credentials": "E-mail ou senha incorretos.",
       "email already exists": "Este e-mail já está cadastrado.",
       "not found": "Registro não encontrado.",
-      "duplicate association": "Esta máquina já pertence ao fluxo.",
-      "duplicate position": "Esta posição já está ocupada.",
+      "machine already belongs to this production line": "Esta máquina já pertence ao fluxo.",
+      "position already in use": "Esta posição já está ocupada.",
       unauthorized: "Sua sessão expirou. Entre novamente.",
     };
     const message = data?.error || `Erro HTTP ${response.status}`;

@@ -129,7 +129,7 @@ export default function App() {
 
   const pageContent = useMemo(() => {
     if (page === "machines") {
-      return <MachinesPage token={token} machines={machines} refreshing={refreshing} refresh={refreshMachines} notify={notify} />;
+      return <MachinesPage token={token} machines={machines} refreshing={refreshing} refresh={refreshAll} notify={notify} />;
     }
     if (page === "flows") {
       return <FlowsPage token={token} machines={machines} lines={lines} lineDetails={lineDetails} refresh={refreshLines} notify={notify} />;

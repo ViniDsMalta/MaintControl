@@ -3,6 +3,7 @@ package handlers
 import (
 	"encoding/json"
 	"errors"
+	"io"
 	"net/http"
 
 	"MaintControl/internal/services"
@@ -48,8 +49,17 @@ func handleServiceError(w http.ResponseWriter, err error) {
 	writeError(w, status, message)
 }
 
-func decodeJSON(r *http.Request, target any) error {
+const maxRequestBodySize = 1 << 20
+
+func decodeJSON(w http.ResponseWriter, r *http.Request, target any) error {
+	r.Body = http.MaxBytesReader(w, r.Body, maxRequestBodySize)
 	decoder := json.NewDecoder(r.Body)
 	decoder.DisallowUnknownFields()
-	return decoder.Decode(target)
+	if err := decoder.Decode(target); err != nil {
+		return err
+	}
+	if err := decoder.Decode(&struct{}{}); err != io.EOF {
+		return errors.New("request body must contain a single JSON object")
+	}
+	return nil
 }

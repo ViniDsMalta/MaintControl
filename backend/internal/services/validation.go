@@ -10,6 +10,9 @@ func normalizeEmail(email string) string {
 }
 
 func validEmail(email string) bool {
+	if len(email) == 0 || len(email) > 255 {
+		return false
+	}
 	parsed, err := mail.ParseAddress(email)
 	return err == nil && parsed.Address == email
 }

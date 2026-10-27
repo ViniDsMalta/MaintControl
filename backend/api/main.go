@@ -66,7 +66,16 @@ func main() {
 
 	log.Printf("Servidor iniciado na porta %s", cfg.ServerPort)
 
-	if err := http.ListenAndServe(":"+cfg.ServerPort, mux); err != nil {
+	server := &http.Server{
+		Addr:              ":" + cfg.ServerPort,
+		Handler:           mux,
+		ReadHeaderTimeout: 5 * time.Second,
+		ReadTimeout:       15 * time.Second,
+		WriteTimeout:      30 * time.Second,
+		IdleTimeout:       60 * time.Second,
+		MaxHeaderBytes:    1 << 20,
+	}
+	if err := server.ListenAndServe(); err != nil {
 		log.Fatal(err)
 	}
 }

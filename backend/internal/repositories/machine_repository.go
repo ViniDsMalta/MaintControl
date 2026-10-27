@@ -92,7 +92,25 @@ func (r *MachineRepository) GetByIDForUser(ctx context.Context, id, userID strin
 }
 
 func (r *MachineRepository) UpdateForUser(ctx context.Context, machine models.Machine) (models.Machine, error) {
-	err := r.db.QueryRow(ctx,
+	tx, err := r.db.Begin(ctx)
+	if err != nil {
+		return models.Machine{}, err
+	}
+	defer func() { _ = tx.Rollback(ctx) }()
+
+	var previousType string
+	err = tx.QueryRow(ctx,
+		`SELECT type FROM machines WHERE id = $1 AND user_id = $2 FOR UPDATE`,
+		machine.ID, machine.UserID,
+	).Scan(&previousType)
+	if err == pgx.ErrNoRows {
+		return models.Machine{}, services.ErrNotFound
+	}
+	if err != nil {
+		return models.Machine{}, err
+	}
+
+	err = tx.QueryRow(ctx,
 		`UPDATE machines
 		 SET name = $1, type = $2
 		 WHERE id = $3 AND user_id = $4
@@ -103,6 +121,22 @@ func (r *MachineRepository) UpdateForUser(ctx context.Context, machine models.Ma
 		return models.Machine{}, services.ErrNotFound
 	}
 	if err != nil {
+		return models.Machine{}, err
+	}
+	if previousType != machine.Type {
+		if _, err := tx.Exec(ctx, `DELETE FROM telemetry WHERE machine_id = $1`, machine.ID); err != nil {
+			return models.Machine{}, err
+		}
+		if _, err := tx.Exec(ctx,
+			`UPDATE machine_status
+			 SET health_score = NULL, risk_score = NULL, status = $1, updated_at = NOW()
+			 WHERE machine_id = $2`,
+			models.StatusWaitingData, machine.ID,
+		); err != nil {
+			return models.Machine{}, err
+		}
+	}
+	if err := tx.Commit(ctx); err != nil {
 		return models.Machine{}, err
 	}
 

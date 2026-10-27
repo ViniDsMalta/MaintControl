@@ -58,7 +58,7 @@ func (h *MachineHandler) create(w http.ResponseWriter, r *http.Request, userID s
 		Name string `json:"name"`
 		Type string `json:"type"`
 	}
-	if err := decodeJSON(r, &request); err != nil {
+	if err := decodeJSON(w, r, &request); err != nil {
 		writeError(w, http.StatusBadRequest, "invalid json")
 		return
 	}
@@ -97,7 +97,7 @@ func (h *MachineHandler) update(w http.ResponseWriter, r *http.Request, userID, 
 		Name string `json:"name"`
 		Type string `json:"type"`
 	}
-	if err := decodeJSON(r, &request); err != nil {
+	if err := decodeJSON(w, r, &request); err != nil {
 		writeError(w, http.StatusBadRequest, "invalid json")
 		return
 	}

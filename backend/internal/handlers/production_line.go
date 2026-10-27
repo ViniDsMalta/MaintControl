@@ -80,7 +80,7 @@ func (h *ProductionLineHandler) create(w http.ResponseWriter, r *http.Request, u
 	var request struct {
 		Name string `json:"name"`
 	}
-	if err := decodeJSON(r, &request); err != nil {
+	if err := decodeJSON(w, r, &request); err != nil {
 		writeError(w, http.StatusBadRequest, "invalid json")
 		return
 	}
@@ -121,7 +121,7 @@ func (h *ProductionLineHandler) update(w http.ResponseWriter, r *http.Request, u
 	var request struct {
 		Name string `json:"name"`
 	}
-	if err := decodeJSON(r, &request); err != nil {
+	if err := decodeJSON(w, r, &request); err != nil {
 		writeError(w, http.StatusBadRequest, "invalid json")
 		return
 	}
@@ -149,7 +149,7 @@ func (h *ProductionLineHandler) addMachine(w http.ResponseWriter, r *http.Reques
 		MachineID string `json:"machine_id"`
 		Position  int    `json:"position"`
 	}
-	if err := decodeJSON(r, &request); err != nil {
+	if err := decodeJSON(w, r, &request); err != nil {
 		writeError(w, http.StatusBadRequest, "invalid json")
 		return
 	}

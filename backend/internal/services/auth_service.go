@@ -2,6 +2,7 @@ package services
 
 import (
 	"context"
+	"errors"
 	"strings"
 	"time"
 
@@ -27,7 +28,7 @@ func (s *AuthService) Register(ctx context.Context, name, email, password string
 	name = strings.TrimSpace(name)
 	email = normalizeEmail(email)
 
-	if name == "" || !validEmail(email) || len(password) < 6 {
+	if name == "" || !validEmail(email) || len(password) < 6 || len(password) > 1024 {
 		return models.User{}, "", ErrInvalidInput
 	}
 
@@ -62,13 +63,16 @@ func (s *AuthService) Register(ctx context.Context, name, email, password string
 
 func (s *AuthService) Login(ctx context.Context, email, password string) (models.User, string, error) {
 	email = normalizeEmail(email)
-	if !validEmail(email) || password == "" {
+	if !validEmail(email) || password == "" || len(password) > 1024 {
 		return models.User{}, "", ErrInvalidCredentials
 	}
 
 	user, err := s.users.GetByEmail(ctx, email)
-	if err != nil {
+	if errors.Is(err, ErrNotFound) {
 		return models.User{}, "", ErrInvalidCredentials
+	}
+	if err != nil {
+		return models.User{}, "", err
 	}
 	if !verifyPassword(password, user.PasswordHash) {
 		return models.User{}, "", ErrInvalidCredentials
