@@ -6,12 +6,16 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
+RUN useradd --create-home --uid 10001 appuser
+
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY src ./src
-COPY models ./models
-COPY api.py .
+COPY --chown=appuser:appuser src ./src
+COPY --chown=appuser:appuser models ./models
+COPY --chown=appuser:appuser api.py .
+
+USER appuser
 
 EXPOSE 8000
 

@@ -13,6 +13,8 @@ FROM gcr.io/distroless/static-debian12
 WORKDIR /app
 COPY --from=builder /app/maintcontrol-api /app/maintcontrol-api
 
+USER nonroot:nonroot
+
 EXPOSE 8080
 
 CMD ["/app/maintcontrol-api"]

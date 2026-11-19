@@ -9,13 +9,13 @@ import (
 
 type SimulatorMachineStore interface {
 	ListAll(ctx context.Context) ([]models.Machine, error)
+	GetByID(ctx context.Context, id string) (models.Machine, error)
 }
 
 type SimulatorMachine struct {
-	ID     string `json:"id"`
-	Name   string `json:"name"`
-	Type   string `json:"type"`
-	APIKey string `json:"api_key"`
+	ID   string `json:"id"`
+	Name string `json:"name"`
+	Type string `json:"type"`
 }
 
 type SimulatorService struct {
@@ -39,8 +39,22 @@ func (s *SimulatorService) ListMachines(ctx context.Context, token string) ([]Si
 	result := make([]SimulatorMachine, 0, len(machines))
 	for _, machine := range machines {
 		result = append(result, SimulatorMachine{
-			ID: machine.ID, Name: machine.Name, Type: machine.Type, APIKey: machine.APIKey,
+			ID: machine.ID, Name: machine.Name, Type: machine.Type,
 		})
 	}
 	return result, nil
+}
+
+func (s *SimulatorService) MachineAPIKey(ctx context.Context, token, machineID string) (string, error) {
+	if token == "" || subtle.ConstantTimeCompare([]byte(token), []byte(s.token)) != 1 {
+		return "", ErrUnauthorized
+	}
+	if err := validateUUID(machineID); err != nil {
+		return "", ErrInvalidInput
+	}
+	machine, err := s.machines.GetByID(ctx, machineID)
+	if err != nil {
+		return "", err
+	}
+	return machine.APIKey, nil
 }

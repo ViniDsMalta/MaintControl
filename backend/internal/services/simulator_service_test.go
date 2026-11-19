@@ -20,7 +20,7 @@ func TestSimulatorMachineDiscoveryRequiresToken(t *testing.T) {
 	if err != nil || len(machines) != 1 {
 		t.Fatalf("expected one machine, got %+v and %v", machines, err)
 	}
-	if machines[0].APIKey != "machine-key" || machines[0].Type != "motor" {
+	if machines[0].Type != "motor" {
 		t.Fatalf("unexpected simulator machine: %+v", machines[0])
 	}
 }
@@ -31,4 +31,13 @@ type fakeSimulatorMachineStore struct {
 
 func (s *fakeSimulatorMachineStore) ListAll(_ context.Context) ([]models.Machine, error) {
 	return s.machines, nil
+}
+
+func (s *fakeSimulatorMachineStore) GetByID(_ context.Context, id string) (models.Machine, error) {
+	for _, machine := range s.machines {
+		if machine.ID == id {
+			return machine, nil
+		}
+	}
+	return models.Machine{}, ErrNotFound
 }

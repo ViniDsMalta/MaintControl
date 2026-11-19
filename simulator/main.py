@@ -14,7 +14,7 @@ from src.generators import MachineTelemetryGenerator
 
 
 BACKEND_URL = os.getenv("BACKEND_URL", "http://localhost:8080").rstrip("/")
-SIMULATOR_TOKEN = os.getenv("SIMULATOR_TOKEN", "change-this-simulator-token")
+SIMULATOR_TOKEN = os.getenv("SIMULATOR_TOKEN", "")
 SIMULATION_INTERVAL = float(os.getenv("SIMULATION_INTERVAL", "5"))
 MACHINE_REFRESH_INTERVAL = float(os.getenv("MACHINE_REFRESH_INTERVAL", "15"))
 NORMAL_READINGS = int(os.getenv("SIMULATION_NORMAL_READINGS", "45"))
@@ -31,7 +31,6 @@ class SimulatedMachine:
     id: str
     name: str
     public_type: str
-    api_key: str
     generator: MachineTelemetryGenerator
     tick: int = 0
 
@@ -88,7 +87,6 @@ def discover_machines(current: dict[str, SimulatedMachine]) -> dict[str, Simulat
         existing = current.get(machine["id"])
         if (
             existing is not None
-            and existing.api_key == machine["api_key"]
             and existing.public_type == machine_type
         ):
             existing.name = machine["name"]
@@ -100,7 +98,6 @@ def discover_machines(current: dict[str, SimulatedMachine]) -> dict[str, Simulat
             id=machine["id"],
             name=machine["name"],
             public_type=machine_type,
-            api_key=machine["api_key"],
             generator=MachineTelemetryGenerator(TYPE_MAPPING[machine_type], seed=seed),
         )
         logging.info("Discovered %s (%s)", machine["name"], machine_type)
@@ -109,7 +106,12 @@ def discover_machines(current: dict[str, SimulatedMachine]) -> dict[str, Simulat
 
 def send_reading(machine: SimulatedMachine) -> None:
     simulated_state, reading = machine.next_reading()
-    result = request_json("POST", "/telemetry", {"X-API-Key": machine.api_key}, reading)
+    result = request_json(
+        "POST",
+        "/simulator/telemetry",
+        {"X-Simulator-Token": SIMULATOR_TOKEN},
+        {"machine_id": machine.id, "reading": reading},
+    )
     current_status = (result.get("machine_status") or {}).get("status", "UNKNOWN")
     logging.info(
         "%s generated=%s backend=%s readings=%s",
@@ -122,6 +124,8 @@ def send_reading(machine: SimulatedMachine) -> None:
 
 def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+    if len(SIMULATOR_TOKEN) < 32:
+        raise ValueError("SIMULATOR_TOKEN must contain at least 32 characters")
     if SIMULATION_MODE not in {"cycle", *FORCED_STATES}:
         raise ValueError("SIMULATION_MODE must be cycle, normal, degradation, or failure")
     if not math.isfinite(SIMULATION_SEVERITY) or not 0 <= SIMULATION_SEVERITY <= 1:

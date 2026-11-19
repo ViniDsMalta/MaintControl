@@ -186,6 +186,18 @@ func (r *MachineRepository) GetByAPIKey(ctx context.Context, apiKey string) (mod
 	return machine, nil
 }
 
+func (r *MachineRepository) GetByID(ctx context.Context, id string) (models.Machine, error) {
+	var machine models.Machine
+	err := scanMachine(r.db.QueryRow(ctx, machineWithStatusQuery+` WHERE m.id = $1`, id), &machine)
+	if err == pgx.ErrNoRows {
+		return models.Machine{}, services.ErrNotFound
+	}
+	if err != nil {
+		return models.Machine{}, err
+	}
+	return machine, nil
+}
+
 func (r *MachineRepository) ListAll(ctx context.Context) ([]models.Machine, error) {
 	rows, err := r.db.Query(ctx, machineWithStatusQuery+` ORDER BY m.created_at ASC`)
 	if err != nil {

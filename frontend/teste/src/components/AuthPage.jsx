@@ -78,7 +78,7 @@ export function AuthPage({ onAuthenticated }) {
             <label>
               Senha
               <span className="password-field">
-                <input name="password" type={showPassword ? "text" : "password"} value={form.password} onChange={updateField} placeholder="Mínimo de 6 caracteres" autoComplete={mode === "login" ? "current-password" : "new-password"} minLength="6" required />
+                <input name="password" type={showPassword ? "text" : "password"} value={form.password} onChange={updateField} placeholder={mode === "register" ? "Mínimo de 12 caracteres" : "Sua senha"} autoComplete={mode === "login" ? "current-password" : "new-password"} minLength={mode === "register" ? 12 : 1} maxLength="128" required />
                 <button type="button" className="icon-button subtle" onClick={() => setShowPassword((value) => !value)} aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"} title={showPassword ? "Ocultar senha" : "Mostrar senha"}>
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>

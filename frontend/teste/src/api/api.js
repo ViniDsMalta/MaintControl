@@ -25,6 +25,7 @@ async function request(path, { method = "GET", token, body } = {}) {
       "not found": "Registro não encontrado.",
       "machine already belongs to this production line": "Esta máquina já pertence ao fluxo.",
       "position already in use": "Esta posição já está ocupada.",
+      "too many requests": "Muitas tentativas. Aguarde alguns minutos e tente novamente.",
       unauthorized: "Sua sessão expirou. Entre novamente.",
     };
     const message = data?.error || `Erro HTTP ${response.status}`;

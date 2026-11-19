@@ -127,16 +127,26 @@ func validTelemetry(machineType string, reading models.TelemetryReading) bool {
 	switch machineType {
 	case "motor":
 		return reading.Temperature != nil && reading.Vibration != nil && reading.RPM != nil &&
-			reading.Pressure == nil && reading.FlowRate == nil
+			reading.Pressure == nil && reading.FlowRate == nil &&
+			inRange(reading.Temperature, 35, 105) && inRange(reading.Vibration, 0.1, 8) &&
+			inRange(reading.RPM, 900, 2200)
 	case "bomba":
 		return reading.Pressure != nil && reading.FlowRate != nil && reading.Vibration != nil &&
-			reading.Temperature == nil && reading.RPM == nil
+			reading.Temperature == nil && reading.RPM == nil &&
+			inRange(reading.Pressure, 0.3, 7) && inRange(reading.FlowRate, 10, 130) &&
+			inRange(reading.Vibration, 0.1, 8)
 	case "compressor":
 		return reading.Temperature != nil && reading.Pressure != nil && reading.Vibration != nil &&
-			reading.RPM == nil && reading.FlowRate == nil
+			reading.RPM == nil && reading.FlowRate == nil &&
+			inRange(reading.Temperature, 30, 115) && inRange(reading.Pressure, 1, 12) &&
+			inRange(reading.Vibration, 0.1, 8)
 	default:
 		return false
 	}
+}
+
+func inRange(value *float64, minimum, maximum float64) bool {
+	return value != nil && *value >= minimum && *value <= maximum
 }
 
 func finitePointers(values ...*float64) bool {

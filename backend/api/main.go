@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
 	"os"
@@ -23,9 +24,14 @@ func main() {
 		return
 	}
 
-	_ = godotenv.Load()
+	if err := godotenv.Load(); err != nil {
+		_ = godotenv.Load("../.env")
+	}
 
 	cfg := config.Load()
+	if err := cfg.Validate(); err != nil {
+		log.Fatal(err)
+	}
 
 	if err := database.Connect(cfg.ConnectionString()); err != nil {
 		log.Fatal(err)
@@ -38,6 +44,7 @@ func main() {
 	machineRepo := repositories.NewMachineRepository(database.DB)
 	productionLineRepo := repositories.NewProductionLineRepository(database.DB)
 	telemetryRepo := repositories.NewTelemetryRepository(database.DB)
+	startTelemetryRetention(telemetryRepo, cfg.RetentionDays)
 	aiClient := clients.NewAIClient(cfg.AIServiceURL, cfg.AITimeout)
 
 	authService := services.NewAuthService(userRepo, cfg.JWTSecret)
@@ -50,12 +57,14 @@ func main() {
 	machineHandler := handlers.NewMachineHandler(machineService)
 	productionLineHandler := handlers.NewProductionLineHandler(productionLineService)
 	telemetryHandler := handlers.NewTelemetryHandler(telemetryService)
-	simulatorHandler := handlers.NewSimulatorHandler(simulatorService)
+	simulatorHandler := handlers.NewSimulatorHandler(simulatorService, telemetryService)
 
 	mux := http.NewServeMux()
+	loginLimiter := middleware.NewIPRateLimiter(10, 5*time.Minute)
+	registerLimiter := middleware.NewIPRateLimiter(5, 10*time.Minute)
 	mux.HandleFunc("/health", handlers.HealthHandler)
-	mux.HandleFunc("/auth/register", authHandler.Register)
-	mux.HandleFunc("/auth/login", authHandler.Login)
+	mux.HandleFunc("/auth/register", registerLimiter.Wrap(authHandler.Register))
+	mux.HandleFunc("/auth/login", loginLimiter.Wrap(authHandler.Login))
 	mux.Handle("/auth/me", middleware.Auth(authService, http.HandlerFunc(authHandler.Me)))
 	mux.Handle("/machines", middleware.Auth(authService, machineHandler))
 	mux.Handle("/machines/", middleware.Auth(authService, machineHandler))
@@ -63,6 +72,7 @@ func main() {
 	mux.Handle("/production-lines/", middleware.Auth(authService, productionLineHandler))
 	mux.HandleFunc("/telemetry", telemetryHandler.Receive)
 	mux.HandleFunc("/simulator/machines", simulatorHandler.ListMachines)
+	mux.HandleFunc("/simulator/telemetry", simulatorHandler.ReceiveTelemetry)
 
 	log.Printf("Servidor iniciado na porta %s", cfg.ServerPort)
 
@@ -78,6 +88,29 @@ func main() {
 	if err := server.ListenAndServe(); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func startTelemetryRetention(repository *repositories.TelemetryRepository, retentionDays int) {
+	cleanup := func() {
+		cutoff := time.Now().AddDate(0, 0, -retentionDays)
+		deleted, err := repository.DeleteOlderThan(context.Background(), cutoff)
+		if err != nil {
+			log.Printf("telemetry retention failed: %v", err)
+			return
+		}
+		if deleted > 0 {
+			log.Printf("telemetry retention removed %d old readings", deleted)
+		}
+	}
+
+	cleanup()
+	go func() {
+		ticker := time.NewTicker(24 * time.Hour)
+		defer ticker.Stop()
+		for range ticker.C {
+			cleanup()
+		}
+	}()
 }
 
 func runHealthcheck() {

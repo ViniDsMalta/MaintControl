@@ -28,7 +28,7 @@ func (s *AuthService) Register(ctx context.Context, name, email, password string
 	name = strings.TrimSpace(name)
 	email = normalizeEmail(email)
 
-	if name == "" || !validEmail(email) || len(password) < 6 || len(password) > 1024 {
+	if name == "" || !validEmail(email) || len(password) < 12 || len(password) > 128 {
 		return models.User{}, "", ErrInvalidInput
 	}
 
@@ -63,7 +63,7 @@ func (s *AuthService) Register(ctx context.Context, name, email, password string
 
 func (s *AuthService) Login(ctx context.Context, email, password string) (models.User, string, error) {
 	email = normalizeEmail(email)
-	if !validEmail(email) || password == "" || len(password) > 1024 {
+	if !validEmail(email) || password == "" || len(password) > 128 {
 		return models.User{}, "", ErrInvalidCredentials
 	}
 
